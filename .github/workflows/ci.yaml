@@ -1,0 +1,55 @@
+# SPDX-FileCopyrightText: 2026 Jiffly
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
+name: CI
+
+on:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reuse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: fsfe/reuse-action@v5
+
+  checks:
+    name: checks (${{ matrix.id }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: fmt
+            target: .#ci_fmt
+          - id: clippy
+            target: .#ci_clippy
+          - id: test
+            target: .#ci_test
+          - id: build
+            target: .#default
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: wimpysworld/nothing-but-nix@main
+        with:
+          root-safe-haven: "8192"
+          mnt-safe-haven: "4096"
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            accept-flake-config = true
+
+      - uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.lock', '**/*.nix', 'Cargo.lock') }}
+          restore-prefixes-first-match: |
+            nix-${{ runner.os }}-
+
+      - run: nix build -L ${{ matrix.target }}
