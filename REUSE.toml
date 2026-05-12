@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2026 Jiffly
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
+version = 1
+
+[[annotations]]
+path = [
+    "Cargo.lock",
+    "flake.lock",
+    "README.md",
+]
+SPDX-FileCopyrightText = "2026 Jiffly"
+SPDX-License-Identifier = "MIT OR Apache-2.0"
