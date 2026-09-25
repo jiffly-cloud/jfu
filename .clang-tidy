@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 Jiffly
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
+Checks: >-
+  -*,
+  clang-analyzer-core.*,
+  clang-analyzer-deadcode.*,
+  clang-analyzer-security.*,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
+  clang-analyzer-unix.*,
+  bugprone-sizeof-expression,
+  bugprone-suspicious-memset-usage,
+  bugprone-macro-parentheses,
+  bugprone-multiple-statement-macro
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*/include/jiffly/.*'
+FormatStyle: file

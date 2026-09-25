@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 Jiffly
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
+BasedOnStyle: LLVM
+IndentWidth: 4
+ContinuationIndentWidth: 4
+UseTab: Never
+ColumnLimit: 100
+BreakBeforeBraces: Attach
+AlignAfterOpenBracket: BlockIndent
+AlignOperands: DontAlign
+BinPackArguments: false
+BinPackParameters: false
+SortIncludes: Never
+SpaceAfterCStyleCast: false
+AlignEscapedNewlines: Left
