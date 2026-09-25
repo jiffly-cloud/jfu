@@ -32,6 +32,10 @@ jobs:
             target: .#ci_test
           - id: build
             target: .#default
+          - id: c-lint
+            target: .#ci_c_lint
+          - id: c-test
+            target: .#ci_c_test
 
     steps:
       - uses: actions/checkout@v6
