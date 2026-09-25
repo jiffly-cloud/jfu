@@ -87,12 +87,42 @@
             inherit cargoArtifacts;
           }
         );
+        cExampleArgs = {
+          src = pkgs.lib.fileset.toSource {
+            root = ./.;
+            fileset = pkgs.lib.fileset.unions [
+              ./.clang-format
+              ./.clang-tidy
+              ./examples/c
+            ];
+          };
+          nativeBuildInputs = [
+            pkgs.llvmPackages_21.clang-tools
+            pkgs.llvmPackages_21.clang
+            pkgs.gcc
+            pkgs.gnumake
+          ];
+        };
+
+        cLint = pkgs.runCommand "jiffly-c-lint" cExampleArgs ''
+          make -C "$src/examples/c" lint
+          touch "$out"
+        '';
+
+        cTest = pkgs.runCommand "jiffly-c-test" cExampleArgs ''
+          make -C "$src/examples/c" test CC=gcc BUILD_DIR="$TMPDIR/gcc"
+          make -C "$src/examples/c" test CC=clang BUILD_DIR="$TMPDIR/clang"
+          touch "$out"
+        '';
+
       in
       {
         checks = {
           clippy = jfuClippy;
           test = jfuTest;
           fmt = jfuFmt;
+          c-lint = cLint;
+          c-test = cTest;
           reuse =
             pkgs.runCommand "jfu-reuse"
               {
@@ -111,6 +141,8 @@
           ci_fmt = jfuFmt;
           ci_clippy = jfuClippy;
           ci_test = jfuTest;
+          ci_c_lint = cLint;
+          ci_c_test = cTest;
         };
 
         devShells.default = pkgs.mkShell {
